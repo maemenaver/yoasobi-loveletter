@@ -7,7 +7,13 @@ import {
     useThree,
 } from "@react-three/fiber";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { OrbitControls, Reflector, Sky, useTexture } from "@react-three/drei";
+import {
+    Cloud,
+    OrbitControls,
+    Reflector,
+    Sky,
+    useTexture,
+} from "@react-three/drei";
 import { Water } from "three-stdlib";
 import ModelComponent from "./model";
 
@@ -70,17 +76,44 @@ function App() {
                 <Suspense fallback={null}>
                     <group position-y={-0.25}>
                         <Ocean />
-                        <Box />
-                        <ModelComponent />
+                        {/* <Box /> */}
+                        {/* <ModelComponent />
+                        <ModelComponent position={[10, 0, -10]} />
+                        <ModelComponent position={[-10, 0, 10]} />
+                        <ModelComponent position={[-10, 0, 20]} />
+                        <ModelComponent position={[55, 0, 10]} />
+                        <ModelComponent position={[20, 0, -50]} /> */}
                     </group>
+                    <Cloud
+                        position={[0, 100, 0]}
+                        width={100}
+                        depth={1}
+                        segments={800}
+                        speed={1}
+                    />
+                    <Cloud
+                        position={[100, 100, 0]}
+                        width={100}
+                        depth={1}
+                        segments={800}
+                        speed={1}
+                    />
+                    <Cloud
+                        position={[-100, 100, 0]}
+                        width={100}
+                        depth={1}
+                        segments={800}
+                        speed={1}
+                    />
                 </Suspense>
 
                 <Sky
                     // @ts-ignore
-                    scale={1000}
+                    scale={10000}
                     sunPosition={[500, 150, -1000]}
                     turbidity={0.1}
                 />
+
                 <OrbitControls />
             </Canvas>
         </div>
