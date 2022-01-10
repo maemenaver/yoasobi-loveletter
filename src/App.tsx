@@ -9,41 +9,16 @@ import {
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import {
     Cloud,
+    Environment,
     OrbitControls,
     Reflector,
     Sky,
+    useCubeTexture,
     useTexture,
 } from "@react-three/drei";
 import { Water } from "three-stdlib";
 import ModelComponent from "./model";
-
-extend({ Water });
-
-function Ocean() {
-    const ref = useRef<any>();
-    const gl = useThree((state) => state.gl);
-    const waterNormals = useLoader(THREE.TextureLoader, "/waternormals.jpeg");
-    waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
-    const geom = useMemo(() => new THREE.PlaneGeometry(10000, 10000), []);
-    const config = useMemo(
-        () => ({
-            textureWidth: 512,
-            textureHeight: 512,
-            waterNormals,
-            sunDirection: new THREE.Vector3(),
-            sunColor: 0xffffff,
-            waterColor: 0x001e0f,
-            distortionScale: 3.7,
-            fog: false,
-        }),
-        [waterNormals]
-    );
-    useFrame(
-        (state, delta) => (ref.current.material.uniforms.time.value += delta)
-    );
-    // @ts-ignore
-    return <water ref={ref} args={[geom, config]} rotation-x={-Math.PI / 2} />;
-}
+import { Surface } from "./model/surface";
 
 function Box() {
     const ref = useRef<any>();
@@ -62,57 +37,71 @@ function Box() {
     );
 }
 
+function SkyBox() {
+    const { scene, gl } = useThree();
+    const environmentMap = useCubeTexture(
+        [
+            "Left_Tex.png",
+            "Right_Tex.png",
+            "Up_Tex.png",
+            "Down_Tex.png",
+            "Front_Tex.png",
+            "Back_Tex.png",
+        ],
+        { path: "/environment/Skybox_8/" }
+    );
+
+    useEffect(() => {
+        console.log(scene);
+        scene.background = environmentMap;
+        scene.environment = environmentMap;
+        scene.environment.encoding = THREE.sRGBEncoding;
+    }, [environmentMap, scene]);
+
+    return (
+        <>
+            <Suspense fallback={null}>
+                {/* <Environment
+                    background={true}
+                    path="/environment/Skybox_8/"
+                    files={[
+                        "Left_Tex.png",
+                        "Right_Tex.png",
+                        "Up_Tex.png",
+                        "Down_Tex.png",
+                        "Front_Tex.png",
+                        "Back_Tex.png",
+                    ]}
+                /> */}
+            </Suspense>
+        </>
+    );
+}
+
 function App() {
     return (
         <div style={{ width: "100vw", height: "100vh" }}>
             <Canvas
                 camera={{ position: [0, 5, 100], fov: 55, near: 1, far: 20000 }}
             >
-                <ambientLight intensity={2} />
+                {/* <ambientLight intensity={2} />
                 <directionalLight position={[10, 10, 0]} intensity={1.5} />
                 <directionalLight position={[-10, 10, 5]} intensity={1} />
                 <directionalLight position={[-10, 20, 0]} intensity={1.5} />
-                <directionalLight position={[0, -10, 0]} intensity={0.25} />
+                <directionalLight position={[0, -10, 0]} intensity={0.25} /> */}
                 <Suspense fallback={null}>
-                    <group position-y={-0.25}>
-                        <Ocean />
-                        {/* <Box /> */}
-                        {/* <ModelComponent />
-                        <ModelComponent position={[10, 0, -10]} />
-                        <ModelComponent position={[-10, 0, 10]} />
-                        <ModelComponent position={[-10, 0, 20]} />
-                        <ModelComponent position={[55, 0, 10]} />
-                        <ModelComponent position={[20, 0, -50]} /> */}
-                    </group>
-                    <Cloud
-                        position={[0, 100, 0]}
-                        width={100}
-                        depth={1}
-                        segments={800}
-                        speed={1}
-                    />
-                    <Cloud
-                        position={[100, 100, 0]}
-                        width={100}
-                        depth={1}
-                        segments={800}
-                        speed={1}
-                    />
-                    <Cloud
-                        position={[-100, 100, 0]}
-                        width={100}
-                        depth={1}
-                        segments={800}
-                        speed={1}
-                    />
+                    <Surface />
                 </Suspense>
 
-                <Sky
+                {/* <Sky
                     // @ts-ignore
                     scale={10000}
                     sunPosition={[500, 150, -1000]}
                     turbidity={0.1}
-                />
+                /> */}
+                <Suspense fallback={null}>
+                    <SkyBox />
+                </Suspense>
 
                 <OrbitControls />
             </Canvas>
