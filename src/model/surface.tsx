@@ -20,11 +20,11 @@ export const Surface = () => {
         <group position-y={-20}>
             <Ocean />
             {/* <Box /> */}
-            {flowers(1000).map((value, index) => (
+            {/* {flowers(100).map((value, index) => (
                 <>
                     <ModelComponent key={`flower_${index}`} position={value} />
                 </>
-            ))}
+            ))} */}
         </group>
     );
 };

@@ -19,6 +19,7 @@ import {
 import { Water } from "three-stdlib";
 import ModelComponent from "./model";
 import { Surface } from "./model/surface";
+import { TextureLoader } from "three";
 
 function Box() {
     const ref = useRef<any>();
@@ -50,17 +51,31 @@ function SkyBox() {
         ],
         { path: "/environment/Skybox_8/" }
     );
+    const background = useLoader(TextureLoader, "/concept.png");
 
     useEffect(() => {
-        console.log(scene);
-        scene.background = environmentMap;
         scene.environment = environmentMap;
         scene.environment.encoding = THREE.sRGBEncoding;
-    }, [environmentMap, scene]);
+    }, [background]);
+
+    // useEffect(() => {
+    //     console.log(scene);
+    //     scene.background = environmentMap;
+    //     scene.environment = environmentMap;
+    //     scene.environment.encoding = THREE.sRGBEncoding;
+    // }, [environmentMap, scene]);
 
     return (
         <>
             <Suspense fallback={null}>
+                <mesh scale={200}>
+                    <sphereGeometry attach="geometry" />
+                    <meshBasicMaterial
+                        attach="material"
+                        map={background}
+                        side={THREE.BackSide}
+                    />
+                </mesh>
                 {/* <Environment
                     background={true}
                     path="/environment/Skybox_8/"
