@@ -20,7 +20,7 @@ export const Surface = () => {
         <group position-y={-20}>
             <Ocean />
             {/* <Box /> */}
-            {flowers(2000).map((value, index) => (
+            {/* {flowers(100).map((value, index) => (
                 <>
                     <Plants1
                         key={`flower_${index}`}
@@ -28,7 +28,7 @@ export const Surface = () => {
                         scale={0.01}
                     />
                 </>
-            ))}
+            ))} */}
         </group>
     );
 };
