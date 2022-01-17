@@ -1,13 +1,13 @@
 import { map } from "../lib/map";
-import ModelComponent from "../model";
 import { Ocean } from "./ocean";
+import Plants1 from "./Plants1";
 
 const flowers = (count: number) => {
     let result = [];
 
     for (let i = 0; i < count; i++) {
-        const z = Math.random() * (-500 - 50) + 50;
-        const xMax = 620 + 55 - map(z, -500, 50, 55, 620);
+        const z = Math.random() * (-500 - 60) + 60;
+        const xMax = 670 + 55 - map(z, -500, 60, 55, 670);
         const x = Math.random() * (xMax + xMax) - xMax;
         result.push([x, 0, z]);
     }
@@ -20,9 +20,13 @@ export const Surface = () => {
         <group position-y={-20}>
             <Ocean />
             {/* <Box /> */}
-            {flowers(1000).map((value, index) => (
+            {flowers(2000).map((value, index) => (
                 <>
-                    <ModelComponent key={`flower_${index}`} position={value} />
+                    <Plants1
+                        key={`flower_${index}`}
+                        position={value}
+                        scale={0.01}
+                    />
                 </>
             ))}
         </group>

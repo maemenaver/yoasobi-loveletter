@@ -7,17 +7,7 @@ import {
     useThree,
 } from "@react-three/fiber";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
-import {
-    Cloud,
-    Environment,
-    OrbitControls,
-    Reflector,
-    Sky,
-    useCubeTexture,
-    useTexture,
-} from "@react-three/drei";
-import { Water } from "three-stdlib";
-import ModelComponent from "./model";
+import { OrbitControls, Stats, useCubeTexture } from "@react-three/drei";
 import { Surface } from "./model/surface";
 
 function Box() {
@@ -104,6 +94,7 @@ function App() {
                 </Suspense>
 
                 <OrbitControls />
+                <Stats />
             </Canvas>
         </div>
     );
