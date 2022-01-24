@@ -7,9 +7,40 @@ import {
     useThree,
 } from "@react-three/fiber";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { OrbitControls, Stats, useCubeTexture } from "@react-three/drei";
+import {
+    OrbitControls,
+    shaderMaterial,
+    Stats,
+    useCubeTexture,
+} from "@react-three/drei";
 import { Surface } from "./model/surface";
 import { TextureLoader } from "three";
+import glsl from "babel-plugin-glsl/macro";
+
+const SkyShaderMaterial = shaderMaterial(
+    {},
+    glsl`
+        varying vec2 vUv;
+
+        void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+`,
+    glsl`
+        varying vec2 vUv;
+
+        void main() {
+            float atmosphere = sqrt(1.0-vUv.y);
+            vec3 skyColor = vec3(0.2, 0.4, 0.8);
+            vec3 scatterColor = mix(vec3(1.0),vec3(1.0,0.3,0.0) * 1.5,0.0);
+            vec3 sky = mix(skyColor, vec3(scatterColor), atmosphere / 0.9);
+            gl_FragColor = vec4(sky , 1.0);
+        }
+`
+);
+
+extend({ SkyShaderMaterial });
 
 function Box() {
     const ref = useRef<any>();
@@ -28,7 +59,7 @@ function Box() {
     );
 }
 
-function SkyBox() {
+const SkyBox = () => {
     const { scene, gl } = useThree();
     const environmentMap = useCubeTexture(
         [
@@ -58,13 +89,15 @@ function SkyBox() {
     return (
         <>
             <Suspense fallback={null}>
-                <mesh scale={200}>
+                <mesh scale={400}>
                     <sphereGeometry attach="geometry" />
-                    <meshBasicMaterial
+                    {/* @ts-ignore */}
+                    <skyShaderMaterial side={THREE.DoubleSide} />
+                    {/* <meshBasicMaterial
                         attach="material"
                         map={background}
                         side={THREE.BackSide}
-                    />
+                    /> */}
                 </mesh>
                 {/* <Environment
                     background={true}
@@ -81,7 +114,7 @@ function SkyBox() {
             </Suspense>
         </>
     );
-}
+};
 
 function App() {
     return (
