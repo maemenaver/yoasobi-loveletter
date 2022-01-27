@@ -18,7 +18,9 @@ import { TextureLoader } from "three";
 import glsl from "babel-plugin-glsl/macro";
 
 const SkyShaderMaterial = shaderMaterial(
-    {},
+    {
+        uColor: new THREE.Color(0.2, 0.4, 0.8),
+    },
     glsl`
         varying vec2 vUv;
 
@@ -28,11 +30,13 @@ const SkyShaderMaterial = shaderMaterial(
         }
 `,
     glsl`
+        uniform vec3 uColor;
+
         varying vec2 vUv;
 
         void main() {
             float atmosphere = sqrt(1.0-vUv.y);
-            vec3 skyColor = vec3(0.2, 0.4, 0.8);
+            vec3 skyColor = uColor;
             vec3 scatterColor = mix(vec3(1.0),vec3(1.0,0.3,0.0) * 1.5,0.0);
             vec3 sky = mix(skyColor, vec3(scatterColor), atmosphere / 0.9);
             gl_FragColor = vec4(sky , 1.0);
@@ -93,7 +97,10 @@ const SkyBox = () => {
                 <mesh scale={400}>
                     <sphereGeometry attach="geometry" />
                     {/* @ts-ignore */}
-                    <skyShaderMaterial side={THREE.BackSide} />
+                    <skyShaderMaterial
+                        side={THREE.BackSide}
+                        uColor={new THREE.Color(0.2, 0.4, 0.8)}
+                    />
                     {/* <meshBasicMaterial
                         attach="material"
                         map={background}
