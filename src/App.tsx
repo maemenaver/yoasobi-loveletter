@@ -73,6 +73,7 @@ const SkyBox = () => {
         { path: "/environment/Skybox_8/" }
     );
     const background = useLoader(TextureLoader, "/concept.png");
+    const clouds = useLoader(TextureLoader, "/clouds.png");
 
     useEffect(() => {
         scene.environment = environmentMap;
@@ -92,12 +93,21 @@ const SkyBox = () => {
                 <mesh scale={400}>
                     <sphereGeometry attach="geometry" />
                     {/* @ts-ignore */}
-                    <skyShaderMaterial side={THREE.DoubleSide} />
+                    <skyShaderMaterial side={THREE.BackSide} />
                     {/* <meshBasicMaterial
                         attach="material"
                         map={background}
                         side={THREE.BackSide}
                     /> */}
+                </mesh>
+                <mesh scale={399}>
+                    <sphereGeometry attach="geometry" />
+                    <meshBasicMaterial
+                        attach="material"
+                        map={clouds}
+                        side={THREE.DoubleSide}
+                        transparent
+                    />
                 </mesh>
                 {/* <Environment
                     background={true}
