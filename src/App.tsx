@@ -136,11 +136,15 @@ const SkyBox = () => {
 
 function App() {
     const cameraRef = useRef<any>();
+    const orbitRef = useRef<any>();
 
     useEffect(() => {
         console.log(cameraRef);
-        cameraRef?.current?.lookAt(new THREE.Vector3(0, 500, 0));
     }, [cameraRef]);
+
+    useEffect(() => {
+        console.log(orbitRef);
+    }, [orbitRef]);
 
     return (
         <div style={{ width: "100vw", height: "100vh" }}>
@@ -187,7 +191,10 @@ function App() {
                     <SkyBox />
                 </Suspense>
 
-                <OrbitControls />
+                <OrbitControls
+                    ref={orbitRef}
+                    target={new THREE.Vector3(0, 0, 0)}
+                />
                 <Stats />
             </Canvas>
         </div>
