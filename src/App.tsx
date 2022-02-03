@@ -9,6 +9,7 @@ import {
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import {
     OrbitControls,
+    PerspectiveCamera,
     shaderMaterial,
     Stats,
     useCubeTexture,
@@ -134,11 +135,39 @@ const SkyBox = () => {
 };
 
 function App() {
+    const cameraRef = useRef<any>();
+
+    useEffect(() => {
+        console.log(cameraRef);
+        cameraRef?.current?.lookAt(new THREE.Vector3(0, 500, 0));
+    }, [cameraRef]);
+
     return (
         <div style={{ width: "100vw", height: "100vh" }}>
             <Canvas
-                camera={{ position: [0, 5, 100], fov: 55, near: 1, far: 20000 }}
+            // 하늘
+            // camera={{
+            //     position: [0, 500, 100],
+            //     fov: 90,
+            //     near: 1,
+            //     far: 20000,
+            // }}
+            // 우주
+            // camera={{
+            //     position: [0, 800, 100],
+            //     fov: 55,
+            //     near: 1,
+            //     far: 20000,
+            // }}
             >
+                <PerspectiveCamera
+                    ref={cameraRef}
+                    makeDefault
+                    position={[0, 5, 100]}
+                    fov={90}
+                    near={1}
+                    far={20000}
+                />
                 {/* <ambientLight intensity={2} />
                 <directionalLight position={[10, 10, 0]} intensity={1.5} />
                 <directionalLight position={[-10, 10, 5]} intensity={1} />
